@@ -4,14 +4,16 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/tmc/langchaingo/llms"
 	"github.com/tmc/langchaingo/llms/openai"
 )
 
 func main() {
+	apiKey := os.Getenv("OPENAI_API_KEY")
 	ctx := context.Background()
-	llm, err := openai.New()
+	llm, err := openai.New(openai.WithToken(apiKey))
 	if err != nil {
 		log.Fatal(err)
 	}
