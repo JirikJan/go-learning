@@ -13,7 +13,7 @@ import (
 
 func main() {
 	// Načíst .env soubor (z kořenového adresáře projektu)
-	err := godotenv.Load("../.env")
+	err := godotenv.Load("../../.env")
 	if err != nil {
 		// Pokud .env neexistuje, pokračuj (možná je API key v system env)
 		log.Println("Warning: .env file not found, using system environment variables")
@@ -30,12 +30,21 @@ func main() {
 		log.Fatal(err)
 	}
 
-	completion, err := llm.GenerateContent(ctx, []llms.MessageContent{
+	// Příprava zpráv
+	messages := []llms.MessageContent{
 		llms.TextParts(llms.ChatMessageTypeHuman, "Proč se vyplatí psát AI aplikace v Go?"),
-	})
+	}
+
+	// Streamování odpovědi pomocí callback funkce
+	_, err = llm.GenerateContent(ctx, messages,
+		llms.WithStreamingFunc(func(ctx context.Context, chunk []byte) error {
+			fmt.Print(string(chunk))
+			return nil
+		}),
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println(completion)
+	fmt.Println() // Nový řádek na konci
 }
