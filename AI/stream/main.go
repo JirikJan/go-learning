@@ -15,7 +15,6 @@ func main() {
 	// Načíst .env soubor (z kořenového adresáře projektu)
 	err := godotenv.Load("../../.env")
 	if err != nil {
-		// Pokud .env neexistuje, pokračuj (možná je API key v system env)
 		log.Println("Warning: .env file not found, using system environment variables")
 	}
 
